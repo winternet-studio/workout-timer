@@ -12,7 +12,9 @@ const app = createApp({
 		const timerId = ref(null);
 		const selectedProgram = ref(programs[0]?.name || ''); // Default to first program
 		const currentProgram = ref(programs[0]?.exercises || []);
-		const audio = new Audio(audioCueFiles.work);
+		const workAudio = new Audio(audioCueFiles.work);
+		const restAudio = new Audio(audioCueFiles.rest);
+		const workoutCompleteAudio = new Audio(audioCueFiles.workoutComplete);
 
 		const currentExercise = computed(() => {
 			return currentExerciseIndex.value < currentProgram.value.length
@@ -61,7 +63,15 @@ const app = createApp({
 					timeLeft.value--;
 				}
 				if (timeLeft.value <= 0) {
-					audio.play().catch(e => console.error('Audio play failed:', e));
+					if (currentExercise.value || isQuickTimerActive.value) {
+						if (isWorkPhase.value) {  // isWorkPhase doesn't change until next interval
+							restAudio.play().catch(e => console.error('Rest audio play failed:', e));
+						} else {
+							workAudio.play().catch(e => console.error('Work audio play failed:', e));
+						}
+					} else {
+						workoutCompleteAudio.play().catch(e => console.error('Work audio play failed:', e));
+					}
 				}
 			}, 1000);
 		};

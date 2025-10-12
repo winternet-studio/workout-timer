@@ -1,5 +1,7 @@
 export const audioQueFiles = {
 	work: 'ding.wav',
+	rest: 'dong.wav',
+	workoutComplete: 'tada.mp3',
 };
 
 export const programs = [
