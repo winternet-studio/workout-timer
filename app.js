@@ -1,5 +1,6 @@
 const { createApp, ref, computed } = Vue;
 const { programs, audioCueFiles } = await import(`./config.js?v=${Date.now()}`);
+import { ClassicSelect } from './components/ClassicSelect.js';
 
 const app = createApp({
 	setup() {
@@ -11,14 +12,14 @@ const app = createApp({
 		const timeLeft = ref(0);
 		const timerId = ref(null);
 		const selectedProgram = ref(programs[0]?.name || ''); // Default to first program
-		const currentProgram = ref(programs[0]?.exercises || []);
+		const currentExercises = ref(programs[0]?.exercises || []);
 		const workAudio = new Audio(audioCueFiles.work);
 		const restAudio = new Audio(audioCueFiles.rest);
 		const workoutCompleteAudio = new Audio(audioCueFiles.workoutComplete);
 
 		const currentExercise = computed(() => {
-			return currentExerciseIndex.value < currentProgram.value.length
-				? currentProgram.value[currentExerciseIndex.value]
+			return currentExerciseIndex.value < currentExercises.value.length
+				? currentExercises.value[currentExerciseIndex.value]
 				: null;
 		});
 
@@ -38,7 +39,7 @@ const app = createApp({
 						// End of quick rest timer, return to workout
 						isQuickTimerActive.value = false;
 						isRunning.value = false;
-						timeLeft.value = currentProgram.value[currentExerciseIndex.value]?.work || 0;
+						timeLeft.value = currentExercises.value[currentExerciseIndex.value]?.work || 0;
 					} else if (isWorkPhase.value && currentExercise.value?.rest) {
 						// Switch to rest phase
 						isWorkPhase.value = false;
@@ -52,8 +53,8 @@ const app = createApp({
 						} else {
 							currentExerciseIndex.value++;
 							currentSet.value = 1;
-							if (currentExerciseIndex.value < currentProgram.value.length) {
-								startTimer(currentProgram.value[currentExerciseIndex.value].work);
+							if (currentExerciseIndex.value < currentExercises.value.length) {
+								startTimer(currentExercises.value[currentExerciseIndex.value].work);
 							} else {
 								isRunning.value = false; // Workout complete
 							}
@@ -88,14 +89,16 @@ const app = createApp({
 			isRunning.value = false;
 		};
 
-		const resetWorkout = () => {
+		const resetWorkout = (options = {}) => {
 			clearInterval(timerId.value);
 			isRunning.value = false;
 			isQuickTimerActive.value = false;
-			currentExerciseIndex.value = 0;
+			if (!options.keepExercise) {
+				currentExerciseIndex.value = 0;
+			}
 			currentSet.value = 1;
 			isWorkPhase.value = true;
-			timeLeft.value = currentProgram.value[0]?.work || 0;
+			timeLeft.value = currentExercises.value[currentExerciseIndex.value]?.work || 0;
 		};
 
 		// Quick timer
@@ -109,18 +112,23 @@ const app = createApp({
 		const loadProgram = (programName) => {
 			const program = programs.find(p => p.name === programName);
 			if (program) {
-				currentProgram.value = program.exercises;
+				currentExercises.value = program.exercises;
 				resetWorkout();
 			}
 		};
 
+		const exerciseChanged = () => {
+			resetWorkout({keepExercise: true});
+		};
+
 		// Initialize
-		if (currentProgram.value.length > 0) {
-			timeLeft.value = currentProgram.value[0].work;
+		if (currentExercises.value.length > 0) {
+			timeLeft.value = currentExercises.value[0].work;
 		}
 
 		return {
 			isRunning,
+			currentExerciseIndex,
 			currentExercise,
 			currentSet,
 			isWorkPhase,
@@ -132,11 +140,14 @@ const app = createApp({
 			resetWorkout,
 			startQuickTimer,
 			selectedProgram,
+			currentExercises,
 			programs,
 			loadProgram,
+			exerciseChanged,
 		};
 	},
 });
 
 app.use(ElementPlus);
+app.component('classic-select', ClassicSelect);
 app.mount('#app');

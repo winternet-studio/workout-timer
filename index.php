@@ -6,7 +6,8 @@
 	<title>Workout Timer</title>
 	<script src="https://unpkg.com/vue@3"></script>
 	<script src="//cdn.jsdelivr.net/npm/element-plus"></script>
-	<link rel="stylesheet" href="https://unpkg.com/element-plus@2.4.4/dist/index.css">
+	<link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css">
+	<link rel="stylesheet" href="components/ClassicSelect.css">
 <style>
 [v-cloak] {
 	display: none;
@@ -57,6 +58,7 @@ body {
 <div id="app" v-cloak>
 	<h1>Workout Timer</h1>
 
+	<!--
 	<el-select v-model="selectedProgram" placeholder="Select Workout Day" @change="loadProgram">
 		<el-option
 			v-for="program in programs"
@@ -65,6 +67,21 @@ body {
 			:value="program.name"
 		/>
 	</el-select>
+	-->
+	<classic-select
+		v-model="selectedProgram"
+		:options="programs.map((pg, idx) => ({ label: pg.name, value: pg.name }))"
+		@change="loadProgram"
+		:fit-content="true"
+	></classic-select>
+	<el-segmented
+		v-model="currentExerciseIndex"
+		:options="currentExercises.map((exercise, key) => ({
+			label: exercise.name,
+			value: key
+		}))"
+		@change="exerciseChanged"
+	/></el-segmented>
 	<div v-if="isQuickTimerActive">
 		<h2>Quick Timer</h2>
 		<p class="exercise-info">&nbsp;<!-- Set X of X --></p>
@@ -81,7 +98,7 @@ body {
 		<div class="timer">{{ formatTime(timeLeft) }}</div>
 		<el-button v-if="!isRunning" type="primary" @click="startWorkout">Start Workout</el-button>
 		<el-button v-if="isRunning" type="warning" @click="pauseWorkout">Pause</el-button>
-		<el-button type="danger" @click="resetWorkout">Reset</el-button>
+		<el-button type="danger" @click="() => resetWorkout({keepExercise: true})" @dblclick="() => resetWorkout({keepExercise: false})">Reset</el-button>
 	</div>
 	<div v-else>
 		<p>Workout Complete!</p>
