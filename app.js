@@ -1,5 +1,5 @@
 const { createApp, ref, computed } = Vue;
-import { programs, audioCueFiles } from './config.js';
+const { programs, audioCueFiles } = await import(`./config.js?v=${Date.now()}`);
 
 const app = createApp({
 	setup() {

@@ -101,7 +101,12 @@ body {
 </div>
 
 <!-- Use ESM versions -->
-<script type="module" src="app.js"></script>
+<script>
+const script = document.createElement('script');
+script.type = 'module';
+script.src = `app.js?v=${Date.now()}`;
+document.head.appendChild(script);
+</script>
 
 </body>
 </html>
