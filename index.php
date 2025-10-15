@@ -93,7 +93,7 @@ body {
 	</div>
 	<div v-else-if="currentExercise">
 		<h2>{{ currentExercise.name }}</h2>
-		<p class="exercise-info">Set {{ currentSet }} of {{ currentExercise.sets }}</p>
+		<p class="exercise-info" @click="setClicked" :title="currentSet < currentExercise.sets ? 'Press to advance set' : null">Set {{ currentSet }} of {{ currentExercise.sets }}</p>
 		<p class="exercise-info">{{ isWorkPhase ? 'Work' : 'Rest' }}</p>
 		<div class="timer">{{ formatTime(timeLeft) }}</div>
 		<el-button v-if="!isRunning" type="primary" @click="startWorkout">Start Workout</el-button>

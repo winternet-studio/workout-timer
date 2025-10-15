@@ -121,6 +121,12 @@ const app = createApp({
 			resetWorkout({keepExercise: true});
 		};
 
+		const setClicked = () => {
+			if (currentSet.value < currentExercise.value.sets) {
+				currentSet.value++;
+			}
+		};
+
 		// Initialize
 		if (currentExercises.value.length > 0) {
 			timeLeft.value = currentExercises.value[0].work;
@@ -144,6 +150,7 @@ const app = createApp({
 			programs,
 			loadProgram,
 			exerciseChanged,
+			setClicked,
 		};
 	},
 });
