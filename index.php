@@ -30,6 +30,17 @@ body {
 	max-width: 600px;
 	width: 100%;
 }
+.el-radio-group {
+	justify-content: center;
+	row-gap: 2px;
+}
+.el-radio-button__inner {
+	border-left: var(--el-border);
+}
+.el-radio-button__inner {
+	margin-left: -1px;  /* to melt two adjacent borders */
+	border-radius: 0 !important;  /* because it doesn't look nice when button group breaks on multiple lines */
+}
 .timer {
 	font-size: 3em;
 	color: #ff4d4f;
@@ -79,14 +90,18 @@ body {
 		@change="loadProgram"
 		:fit-content="true"
 	></classic-select>
-	<el-segmented
+	<el-radio-group
 		v-model="currentExerciseIndex"
-		:options="currentExercises.map((exercise, key) => ({
-			label: exercise.name,
-			value: key
-		}))"
 		@change="exerciseChanged"
-	/></el-segmented>
+	>
+		<el-radio-button
+			v-for="(exercise, key) in currentExercises"
+			:key="key"
+			:label="key"
+		>
+			{{ exercise.name }}
+		</el-radio-button>
+	</el-radio-group>
 	<div v-if="isQuickTimerActive">
 		<h2>Quick Timer</h2>
 		<p class="exercise-info">&nbsp;<!-- Set X of X --></p>
