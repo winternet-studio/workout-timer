@@ -33,8 +33,13 @@ body {
 .timer {
 	font-size: 3em;
 	color: #ff4d4f;
-	margin: 20px 0;
+	margin: 20px 0 0 0;
 	font-weight: bold;
+}
+.rest-time {
+	color: #cccccc;
+	font-size: 80%;
+	margin-bottom: 20px;
 }
 .exercise-info {
 	margin: 10px 0;
@@ -96,6 +101,7 @@ body {
 		<p class="exercise-info" @click="setClicked" :title="currentSet < currentExercise.sets ? 'Press to advance set' : null">Set {{ currentSet }} of {{ currentExercise.sets }}</p>
 		<p class="exercise-info">{{ isWorkPhase ? 'Work' : 'Rest' }}</p>
 		<div class="timer">{{ formatTime(timeLeft) }}</div>
+		<div class="rest-time">{{ currentExercise.rest }}s rest</div>
 		<el-button v-if="!isRunning" type="primary" @click="startWorkout">Start Workout</el-button>
 		<el-button v-if="isRunning" type="warning" @click="pauseWorkout">Pause</el-button>
 		<el-button type="danger" @click="() => resetWorkout({keepExercise: true})" @dblclick="() => resetWorkout({keepExercise: false})">Reset</el-button>
