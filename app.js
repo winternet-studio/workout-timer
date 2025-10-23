@@ -12,6 +12,7 @@ const app = createApp({
 		const isRunning = ref(false);
 		const currentExerciseIndex = ref(0);
 		const currentSet = ref(1);
+		const currentRepetition = ref(1);
 		const isWorkPhase = ref(true);
 		const isQuickTimerActive = ref(false); // New state for quick rest timers
 		const timeLeft = ref(0);
@@ -37,51 +38,65 @@ const app = createApp({
 		};
 
 		const startTimer = (duration) => {
-			timeLeft.value = duration;
-			isRunning.value = true;
-			timerId.value = setInterval(() => {
-				if (timeLeft.value <= 0) {
-					clearInterval(timerId.value);
-					if (isQuickTimerActive.value) {
-						// End of quick rest timer, return to workout
-						isQuickTimerActive.value = false;
-						isRunning.value = false;
-						timeLeft.value = currentExercises.value[currentExerciseIndex.value]?.work || 0;
-					} else if (isWorkPhase.value && currentExercise.value?.rest) {
-						// Switch to rest phase
-						isWorkPhase.value = false;
-						startTimer(currentExercise.value.rest);
-					} else {
-						// End of rest or work-only exercise, move to next set or exercise
-						isWorkPhase.value = true;
-						if (currentSet.value < currentExercise.value?.sets) {
-							currentSet.value++;
-							startTimer(currentExercise.value.work);
-						} else {
-							currentExerciseIndex.value++;
-							currentSet.value = 1;
-							if (currentExerciseIndex.value < currentExercises.value.length) {
-								startTimer(currentExercises.value[currentExerciseIndex.value].work);
+			if (!duration) {  // If work time is not specified it's not a timed exercise (probably a number of repetitions instead)
+				// do nothing (wait for user to click to next exercise)
+				console.log('Not timed');
+			} else {
+				timeLeft.value = duration;
+				isRunning.value = true;
+				timerId.value = setInterval(() => {
+					if (timeLeft.value <= 0) {
+						clearInterval(timerId.value);
+						if (isQuickTimerActive.value) {
+							// End of quick rest timer, return to workout
+							isQuickTimerActive.value = false;
+							isRunning.value = false;
+							timeLeft.value = currentExercise.value.work || 0;
+						} else if (isWorkPhase.value && currentExercise.value?.rest) {
+							// Switch to rest phase
+							isWorkPhase.value = false;
+							if (currentExercise.value?.restBetweenSets && currentExercise.value?.repetitions && currentRepetition.value == currentExercise.value?.repetitions) {
+								startTimer(currentExercise.value.restBetweenSets);
 							} else {
-								isRunning.value = false; // Workout complete
+								startTimer(currentExercise.value.rest);
+							}
+						} else {
+							// End of rest or work-only exercise, move to next set or exercise
+							isWorkPhase.value = true;
+							if (currentExercise.value?.repetitions && currentRepetition.value < currentExercise.value.repetitions) {
+								currentRepetition.value++;
+								startTimer(currentExercise.value.work);
+							} else if (currentSet.value < currentExercise.value?.sets) {
+								currentSet.value++;
+								currentRepetition.value = 1;
+								startTimer(currentExercise.value.work);
+							} else {
+								currentExerciseIndex.value++;
+								currentSet.value = 1;
+								currentRepetition.value = 1;
+								if (currentExerciseIndex.value < currentExercises.value.length) {
+									startTimer(currentExercise.value.work);
+								} else {
+									isRunning.value = false; // Workout complete
+								}
 							}
 						}
-					}
-				} else {
-					timeLeft.value--;
-				}
-				if (timeLeft.value <= 0) {
-					if (currentExercise.value || isQuickTimerActive.value) {
-						if (isWorkPhase.value) {  // isWorkPhase doesn't change until next interval
-							restAudio.play().catch(e => console.error('Rest audio play failed:', e));
-						} else {
-							workAudio.play().catch(e => console.error('Work audio play failed:', e));
-						}
 					} else {
-						workoutCompleteAudio.play().catch(e => console.error('Work audio play failed:', e));
+						timeLeft.value--;
 					}
-				}
-			}, 1000);
+					if (timeLeft.value <= 0) {
+						if (currentExercise.value || isQuickTimerActive.value) {
+							if (isWorkPhase.value) {  // isWorkPhase doesn't change until next interval
+								restAudio.play().catch(e => console.error('Rest audio play failed:', e));
+							} else {
+								workAudio.play().catch(e => console.error('Work audio play failed:', e));
+							}
+						} else {
+							workoutCompleteAudio.play().catch(e => console.error('Work audio play failed:', e));
+						}
+					}
+				}, 1000);
+			}
 		};
 
 		// Workout controls
@@ -104,8 +119,9 @@ const app = createApp({
 				currentExerciseIndex.value = 0;
 			}
 			currentSet.value = 1;
+			currentRepetition.value = 1;
 			isWorkPhase.value = true;
-			timeLeft.value = currentExercises.value[currentExerciseIndex.value]?.work || 0;
+			timeLeft.value = currentExercise.value.work || 0;
 		};
 
 		// Quick timer
@@ -163,6 +179,7 @@ const app = createApp({
 			currentExerciseIndex,
 			currentExercise,
 			currentSet,
+			currentRepetition,
 			isWorkPhase,
 			isQuickTimerActive,
 			timeLeft,

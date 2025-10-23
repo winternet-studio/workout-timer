@@ -1,6 +1,6 @@
 # Workout Timer
 
-Workout timer for your browser with configurable workout programs, eg. a program for each day. Manages repetitions, rest, and sets. Also has quick timers with presets of different length.
+Workout timer for your browser with configurable workout programs, eg. a program for each day. Manages repetitions (timed or not timed), rest, and sets. Also has quick timers with presets of different length.
 
 Provides audible cues.
 

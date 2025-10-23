@@ -113,11 +113,18 @@ body {
 	</div>
 	<div v-else-if="currentExercise">
 		<h2>{{ currentExercise.name }}</h2>
-		<p class="exercise-info" @click="setClicked" :title="currentSet < currentExercise.sets ? 'Press to advance set' : null">Set {{ currentSet }} of {{ currentExercise.sets }}</p>
+		<p class="exercise-info" @click="setClicked" :title="currentSet < currentExercise.sets ? 'Press to advance set' : null">
+			Set {{ currentSet }} of {{ currentExercise.sets }}
+			<span v-if="currentExercise.repetitions"> &nbsp;<span style="opacity: 0.3">&mdash;</span>&nbsp; Rep {{ currentRepetition }} of {{ currentExercise.repetitions }}</span>
+		</p>
 		<p class="exercise-info">{{ isWorkPhase ? 'Work' : 'Rest' }}</p>
-		<div class="timer">{{ formatTime(timeLeft) }}</div>
-		<div class="rest-time">{{ currentExercise.rest }}s rest</div>
-		<el-button v-if="!isRunning" type="primary" @click="startWorkout">Start Workout</el-button>
+		<div class="timer" v-if="currentExercise.work != null">{{ formatTime(timeLeft) }}</div>
+		<div class="timer" v-else>{{ currentExercise.repetitions }} reps{{ (currentExercise.per ? '/'+ currentExercise.per : '') }}</div>
+		<div class="rest-time">
+			{{ currentExercise.rest }}s rest
+			<span v-if="currentExercise.restBetweenSets"> (between sets: {{ currentExercise.restBetweenSets }}s)</span>
+		</div>
+		<el-button v-if="!isRunning" type="primary" :disabled="!currentExercise.work" @click="startWorkout">Start Workout</el-button>
 		<el-button v-if="isRunning" type="warning" @click="pauseWorkout">Pause</el-button>
 		<el-button type="danger" @click="() => resetWorkout({keepExercise: true})" @dblclick="() => resetWorkout({keepExercise: false})">Reset</el-button>
 	</div>

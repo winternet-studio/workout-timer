@@ -1,4 +1,4 @@
-export const audioQueFiles = {
+export const audioCueFiles = {
 	work: 'ding.wav',
 	rest: 'dong.wav',
 	workoutComplete: 'tada.mp3',
@@ -8,11 +8,11 @@ export const programs = [
 	{
 		name: 'Monday Lower Body Strength',
 		exercises: [
-			{ name: 'Bodyweight Squats', sets: 3, work: 3, rest: 2 }, // ~12 reps
-			{ name: 'Glute Bridges', sets: 3, work: 30, rest: 60 }, // ~10 reps
-			{ name: 'Lunges', sets: 3, work: 40, rest: 60 }, // ~10 reps/leg
-			{ name: 'Calf Raises', sets: 3, work: 30, rest: 60 }, // ~15 reps
-			{ name: 'Kegels', sets: 3, work: 50, rest: 0 }, // 5x10-second holds
+			{ name: 'Bodyweight Squats', sets: 3, work: null, rest: 30, repetitions: 12 },
+			{ name: 'Glute Bridges', sets: 3, work: null, rest: 30, repetitions: 10 },
+			{ name: 'Lunges', sets: 3, work: null, rest: 30, repetitions: 10, per: 'leg' },
+			{ name: 'Calf Raises', sets: 3, work: null, rest: 30, repetitions: 15 },
+			{ name: 'Kegels (integrate)', sets: 3, work: 5, rest: 5, repetitions: 10, restBetweenSets: 30 },
 		],
 	},
 	{
@@ -22,38 +22,39 @@ export const programs = [
 			{ name: 'Burpees', sets: 6, work: 20, rest: 40 },
 			{ name: 'Mountain Climbers', sets: 8, work: 30, rest: 30 },
 			{ name: 'Jumping Jacks', sets: 4, work: 60, rest: 30 },
-			{ name: 'Kegels', sets: 3, work: 50, rest: 0 }, // 5x10-second holds
+			{ name: 'Kegels', sets: 5, work: 10, rest: 10 },
 		],
 	},
 	{
 		name: 'Wednesday Core',
 		exercises: [
-			{ name: 'Planks', sets: 3, work: 30, rest: 60 }, // 20-30s holds
-			{ name: 'Russian Twists', sets: 3, work: 30, rest: 60 }, // ~12 reps/side
-			{ name: 'Bicycle Crunches', sets: 3, work: 30, rest: 60 }, // ~10 reps/side
-			{ name: 'Superman Holds', sets: 3, work: 15, rest: 60 }, // 15s holds
-			{ name: 'Kegels (Quick + Long)', sets: 3, work: 60, rest: 0 }, // Quick: 20x1s, Long: 5x10s
+			{ name: 'Planks', sets: 3, work: 30, rest: 60 },
+			{ name: 'Russian Twists', sets: 3, work: null, rest: 60, repetitions: 12, per: 'side' },
+			{ name: 'Bicycle Crunches', sets: 3, work: null, rest: 60, repetitions: 10, per: 'side' },
+			{ name: 'Superman Holds', sets: 3, work: 15, rest: 30 },
+			{ name: 'Kegels (Quick)', sets: 3, work: 1, rest: 1, repetitions: 20, restBetweenSets: 30 },
+			{ name: 'Kegels (Long)', sets: 3, work: 10, rest: 10, repetitions: 5, restBetweenSets: 30 },
 		],
 	},
 	{
 		name: 'Thursday Upper Body Strength',
 		exercises: [
-			{ name: 'Push-Ups', sets: 3, work: 30, rest: 60 }, // ~8-12 reps
-			{ name: 'Wall Push-Ups or Dips', sets: 3, work: 30, rest: 60 }, // ~10 reps
-			{ name: 'Arm Circles', sets: 3, work: 40, rest: 60 }, // 20 circles each way
-			{ name: 'Superman Pulls', sets: 3, work: 30, rest: 60 }, // ~12 reps
-			{ name: 'Reverse Kegels', sets: 3, work: 50, rest: 0 }, // 10x5-second holds
+			{ name: 'Push-Ups', sets: 3, work: null, rest: 30, repetitions: 12 },
+			{ name: 'Dips', sets: 3, work: null, rest: 60, repetitions: 10 },
+			{ name: 'Arm Circles', sets: 3, work: null, rest: 60, repetitions: 20, per: 'direction' },
+			{ name: 'Superman Pulls', sets: 3, work: null, rest: 60, repetitions: 12 },
+			{ name: 'Reverse Kegels (integrate)', sets: 3, work: 5, rest: 5, repetitions: 10, restBetweenSets: 30 },
 		],
 	},
 	{
 		name: 'Friday Yoga and Stretches',
 		exercises: [
-			{ name: 'Child’s Pose', sets: 3, work: 30, rest: 0 },
-			{ name: 'Butterfly Stretch', sets: 3, work: 20, rest: 0 },
-			{ name: 'Downward Dog', sets: 3, work: 20, rest: 0 },
-			{ name: 'Happy Baby Pose', sets: 3, work: 30, rest: 0 },
-			{ name: 'Cat-Cow Pose', sets: 3, work: 30, rest: 0 }, // ~10 reps
-			{ name: 'Kegels', sets: 3, work: 30, rest: 0 }, // Integrated holds
+			{ name: 'Child’s Pose', sets: 3, work: 30, rest: 30 },
+			{ name: 'Butterfly Stretch', sets: 3, work: 20, rest: 20 },
+			{ name: 'Downward Dog', sets: 3, work: 20, rest: 20 },
+			{ name: 'Happy Baby Pose', sets: 3, work: 30, rest: 30 },
+			{ name: 'Cat-Cow Pose', sets: 3, work: 10, rest: 30 },
+			{ name: 'Kegels (integrate)', sets: 3, work: 30, rest: 0 },
 		],
 	},
 ];
