@@ -1,6 +1,10 @@
-const { createApp, ref, computed } = Vue;
-const { programs, audioCueFiles } = await import(`./config.js?v=${Date.now()}`);
-import { ClassicSelect } from './components/ClassicSelect.js';
+async function importNonCached(path) {
+	return import(`${path}?v=${Date.now()}`);
+}
+
+const { createApp, ref, computed, onMounted, watch } = Vue;
+const { programs, audioCueFiles } = await importNonCached('./config.js');
+const { ClassicSelect } = await importNonCached('./components/ClassicSelect.js');
 
 const app = createApp({
 	setup() {
