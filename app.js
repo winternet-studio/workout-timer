@@ -82,7 +82,7 @@ const app = createApp({
 							}
 						}
 					} else {
-						timeLeft.value--;
+						timeLeft.value--;  // NOTE: if we wanted to get rid of the extra second between sets/repetitions we could move this line and the audio logic below up to the beginning of the setInterval() callback
 					}
 					if (timeLeft.value <= 0) {
 						if (currentExercise.value || isQuickTimerActive.value) {
