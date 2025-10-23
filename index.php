@@ -117,7 +117,11 @@ body {
 			Set {{ currentSet }} of {{ currentExercise.sets }}
 			<span v-if="currentExercise.repetitions"> &nbsp;<span style="opacity: 0.3">&mdash;</span>&nbsp; Rep {{ currentRepetition }} of {{ currentExercise.repetitions }}</span>
 		</p>
-		<p class="exercise-info">{{ isWorkPhase ? 'Work' : 'Rest' }}</p>
+		<p class="exercise-info">
+			<div :style="{display: 'inline-block', 'background-color': (isWorkPhase ? 'pink' : 'palegreen'), color: (isWorkPhase ? '#8c5660' : '#4f874f'), 'border-radius': '4px', padding: '4px', width: '150px'}">
+				{{ isWorkPhase ? 'Work' : 'Rest' }}
+			</div>
+		</p>
 		<div class="timer" v-if="currentExercise.work != null">{{ formatTime(timeLeft) }}</div>
 		<div class="timer" v-else>{{ currentExercise.repetitions }} reps{{ (currentExercise.per ? '/'+ currentExercise.per : '') }}</div>
 		<div class="rest-time">
