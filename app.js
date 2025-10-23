@@ -5,6 +5,7 @@ async function importNonCached(path) {
 const { createApp, ref, computed, onMounted, watch } = Vue;
 const { programs, audioCueFiles } = await importNonCached('./config.js');
 const { ClassicSelect } = await importNonCached('./components/ClassicSelect.js');
+const { default: WakeLockManager } = await importNonCached('./helpers/WakeLockManager.js');
 
 const app = createApp({
 	setup() {
@@ -20,6 +21,8 @@ const app = createApp({
 		const workAudio = new Audio(audioCueFiles.work);
 		const restAudio = new Audio(audioCueFiles.rest);
 		const workoutCompleteAudio = new Audio(audioCueFiles.workoutComplete);
+
+		let wakeLockManager = null;
 
 		const currentExercise = computed(() => {
 			return currentExerciseIndex.value < currentExercises.value.length
@@ -130,6 +133,25 @@ const app = createApp({
 				currentSet.value++;
 			}
 		};
+
+		watch(isRunning, (newVal, oldVal) => {
+			if (newVal) {
+				wakeLockManager.requestKeepScreenOn();
+			} else {
+				wakeLockManager.releaseKeepScreenOn();
+			}
+		});
+
+		onMounted(() => {
+			wakeLockManager = new WakeLockManager();
+			window.addEventListener('WakeLockManager.logMessage', (ev) => {
+				if (ev.detail.type == 'info') return;
+				ElementPlus.ElMessage({
+					message: ev.detail.message + (ev.detail.err ? ' '+ JSON.stringify(ev.detail.err) : ''),
+					type: (ev.detail.type == 'warn' ? 'warning' : ev.detail.type), // 'success' | 'warning' | 'info' | 'error'
+				});
+			});
+		});
 
 		// Initialize
 		if (currentExercises.value.length > 0) {
