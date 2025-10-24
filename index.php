@@ -30,6 +30,10 @@ body {
 	max-width: 600px;
 	width: 100%;
 }
+h2 a {
+	text-decoration: none;
+	color: black;
+}
 .el-radio-group {
 	justify-content: center;
 	row-gap: 2px;
@@ -112,7 +116,7 @@ body {
 		<el-button type="danger" @click="resetWorkout">Reset</el-button>
 	</div>
 	<div v-else-if="currentExercise">
-		<h2>{{ currentExercise.name }}</h2>
+		<h2><a :href="'https://duckduckgo.com/?q='+ currentExercise.name.replace(/\([^)]*\)/g, '') +'&ia=images&iax=images'" rel="noopener noreferrer" target="_blank">{{ currentExercise.name }}</a></h2>
 		<p class="exercise-info" @click="setClicked" :title="currentSet < currentExercise.sets ? 'Press to advance set' : null">
 			Set {{ currentSet }} of {{ currentExercise.sets }}
 			<span v-if="currentExercise.repetitions"> &nbsp;<span style="opacity: 0.3">&mdash;</span>&nbsp; Rep {{ currentRepetition }} of {{ currentExercise.repetitions }}</span>
