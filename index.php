@@ -71,6 +71,9 @@ h2 a {
 	justify-content: center;
 	gap: 10px;
 }
+.default-pause {
+	border-color: #96acbb;
+}
 </style>
 </head>
 <body>
@@ -147,6 +150,7 @@ h2 a {
 			:key="duration"
 			:disabled="isRunning"
 			@click="startQuickTimer(duration)"
+			:class="{'default-pause': (currentExercise.rest == duration || currentExercise.restBetweenSets == duration ? true : false) }"
 		>
 			{{ duration }}s
 		</el-button>
